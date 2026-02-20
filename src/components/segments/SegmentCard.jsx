@@ -19,7 +19,7 @@ export default function SegmentCard({ segmentKey, stats }) {
       <div className="flex items-center justify-between">
         <div>
           <div className="text-white/90 text-sm font-semibold">{label}</div>
-          <div className="text-white/40 text-xs">{time}</div>
+          <div className="text-white/60 text-xs">{time}</div>
         </div>
         <span className="text-2xl" role="img" aria-label={label}>{icon}</span>
       </div>
@@ -29,19 +29,19 @@ export default function SegmentCard({ segmentKey, stats }) {
         <span className="text-3xl font-light" style={getTempStyle(stats.avgTemp)}>
           {stats.avgTemp}°
         </span>
-        <span className="text-white/40 text-sm">
+        <span className="text-white/65 text-sm">
           {stats.minTemp}° / {stats.maxTemp}°
         </span>
       </div>
 
       {/* Details */}
-      <div className="flex items-center gap-4 text-xs text-white/50 pt-1 border-t border-white/10 flex-wrap">
+      <div className="flex items-center gap-4 text-xs text-white/70 pt-1 border-t border-white/10 flex-wrap">
         <span className="flex items-center gap-1">
           <Droplets size={12} /> {stats.avgPrecipProb}%
           {stats.totalSnowfall > 0 ? (
-            <span className="text-blue-200/70 ml-1">{stats.totalSnowfall} cm</span>
+            <span className="text-blue-200/90 ml-1">{stats.totalSnowfall} cm</span>
           ) : stats.totalPrecip > 0 ? (
-            <span className="text-white/35 ml-1">{stats.totalPrecip} mm</span>
+            <span className="text-white/65 ml-1">{stats.totalPrecip} mm</span>
           ) : null}
         </span>
         <span className="flex items-center gap-1">

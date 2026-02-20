@@ -24,7 +24,7 @@ export default function DaySegments() {
 
   return (
     <section className="mb-6">
-      <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3">
+      <h2 className="text-white/65 text-xs font-semibold uppercase tracking-wider mb-3">
         {t('sections.hours24')}
       </h2>
       <motion.div

@@ -27,9 +27,9 @@ export default function HeroWeather() {
       className="glass-card p-6 md:p-8 mb-6"
     >
       {/* City name */}
-      <div className="text-white/70 text-sm font-medium mb-1 tracking-wide uppercase">
+      <div className="text-white/80 text-sm font-medium mb-1 tracking-wide uppercase">
         {selectedCity?.name}
-        {selectedCity?.admin1 && <span className="ml-1 opacity-60">· {selectedCity.admin1}</span>}
+        {selectedCity?.admin1 && <span className="ml-1 opacity-75">· {selectedCity.admin1}</span>}
       </div>
 
       {/* Main temp + icon */}
@@ -41,8 +41,8 @@ export default function HeroWeather() {
           >
             {temp}°
           </div>
-          <div className="text-white/60 text-lg mt-1">{weatherLabel}</div>
-          <div className="text-white/40 text-sm mt-0.5">
+          <div className="text-white/75 text-lg mt-1">{weatherLabel}</div>
+          <div className="text-white/65 text-sm mt-0.5">
             {t('hero.feelsLike')} <span style={getTempStyle(feelsLike)}>{feelsLike}°C</span>
           </div>
         </div>
@@ -85,9 +85,9 @@ export default function HeroWeather() {
 function Stat({ icon, label, value }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-white/40">{icon}</span>
+      <span className="text-white/55">{icon}</span>
       <div>
-        <div className="text-white/40 text-xs">{label}</div>
+        <div className="text-white/60 text-xs">{label}</div>
         <div className="text-white/90 text-sm font-medium">{value}</div>
       </div>
     </div>

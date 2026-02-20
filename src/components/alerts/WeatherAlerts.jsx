@@ -62,12 +62,12 @@ function AlertCard({ alert, onDismiss, onExpand }) {
 
             {/* Headline (if present) */}
             {alert.headline && (
-              <p className="text-white/60 text-xs mt-1 leading-snug">{alert.headline}</p>
+              <p className="text-white/75 text-xs mt-1 leading-snug">{alert.headline}</p>
             )}
 
             {/* Expiry */}
             {expiry && (
-              <p className="text-white/35 text-[10px] mt-1">
+              <p className="text-white/60 text-[10px] mt-1">
                 {t('alerts.expires')}: {expiry}
               </p>
             )}
@@ -86,7 +86,7 @@ function AlertCard({ alert, onDismiss, onExpand }) {
           {/* Dismiss */}
           <button
             onClick={() => onDismiss(alert.id)}
-            className="text-white/25 hover:text-white/60 transition-colors shrink-0 p-0.5"
+            className="text-white/50 hover:text-white/80 transition-colors shrink-0 p-0.5"
             aria-label={t('alerts.dismiss')}
           >
             <X size={14} />

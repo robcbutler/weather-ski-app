@@ -18,7 +18,7 @@ export default function HourlyItem({ item, isNow, isNight = false }) {
         transition-all duration-200 min-w-[68px]
       `}
     >
-      <div className="text-white/50 text-xs font-medium">
+      <div className="text-white/70 text-xs font-medium">
         {isNow ? t('time.now') : formatHour(item.time, locale)}
       </div>
       <div className="text-2xl" role="img" aria-label={weatherLabel}>
@@ -31,9 +31,9 @@ export default function HourlyItem({ item, isNow, isNight = false }) {
         <div className="text-blue-300 text-xs opacity-80">{item.precipProb}%</div>
       )}
       {item.snowfall > 0 ? (
-        <div className="text-blue-200/70 text-[10px]">{item.snowfall} cm</div>
+        <div className="text-blue-200/90 text-[10px]">{item.snowfall} cm</div>
       ) : item.precipitation > 0 ? (
-        <div className="text-blue-200/60 text-[10px]">{item.precipitation} mm</div>
+        <div className="text-blue-200/80 text-[10px]">{item.precipitation} mm</div>
       ) : null}
     </div>
   );

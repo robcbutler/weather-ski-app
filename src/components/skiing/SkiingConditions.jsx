@@ -35,7 +35,7 @@ export default function SkiingConditions() {
       className="mb-6"
     >
       {/* Section header */}
-      <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
+      <h2 className="text-white/65 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
         <span>⛷️</span> {t('sections.skiingConditions')}
       </h2>
 

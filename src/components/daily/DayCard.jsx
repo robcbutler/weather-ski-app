@@ -29,9 +29,9 @@ export default function DayCard({ day, isToday, timeZone }) {
               </span>
             )}
             {day.snowfallSum > 0 ? (
-              <span className="text-blue-200/70">{day.snowfallSum} cm</span>
+              <span className="text-blue-200/90">{day.snowfallSum} cm</span>
             ) : day.precipSum > 0 ? (
-              <span className="text-white/40">{day.precipSum} mm</span>
+              <span className="text-white/65">{day.precipSum} mm</span>
             ) : null}
           </div>
         )}
@@ -43,7 +43,7 @@ export default function DayCard({ day, isToday, timeZone }) {
       </span>
 
       {/* Condition label */}
-      <div className="flex-1 text-white/50 text-xs hidden sm:block">
+      <div className="flex-1 text-white/70 text-xs hidden sm:block">
         {weatherLabel}
       </div>
 

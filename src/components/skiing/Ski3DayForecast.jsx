@@ -17,7 +17,7 @@ export default function Ski3DayForecast({ dailyForecast }) {
 
   return (
     <div>
-      <h3 className="text-white/40 text-[10px] font-semibold uppercase tracking-widest mb-2">
+      <h3 className="text-white/60 text-[10px] font-semibold uppercase tracking-widest mb-2">
         {t('ski.threeDayForecast')}
       </h3>
       <motion.div
@@ -31,7 +31,7 @@ export default function Ski3DayForecast({ dailyForecast }) {
           return (
             <motion.div key={day.date} variants={cardVariants} className="glass-card p-3 flex flex-col gap-2">
               {/* Day label */}
-              <div className="text-white/60 text-xs font-semibold">
+              <div className="text-white/80 text-xs font-semibold">
                 {formatRelativeDay(day.date, t, locale)}
               </div>
 
@@ -55,7 +55,7 @@ export default function Ski3DayForecast({ dailyForecast }) {
               </div>
 
               {/* Precip probability */}
-              <div className="flex items-center gap-1 text-white/40 text-xs">
+              <div className="flex items-center gap-1 text-white/60 text-xs">
                 <Droplets size={11} />
                 <span>{day.precipProbMax}%</span>
               </div>

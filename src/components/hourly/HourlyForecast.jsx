@@ -105,7 +105,7 @@ export default function HourlyForecast() {
     >
       {/* Header row: title + day-jump tabs */}
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider">
+        <h2 className="text-white/65 text-xs font-semibold uppercase tracking-wider">
           {t('sections.hourlyForecast')}
         </h2>
         <div className="flex gap-1">
@@ -172,7 +172,7 @@ export default function HourlyForecast() {
                 >
                   <div className="w-px flex-1 bg-white/10 min-h-[8px]" />
                   <span
-                    className="text-white/35 text-[10px] font-semibold uppercase tracking-widest whitespace-nowrap"
+                    className="text-white/55 text-[10px] font-semibold uppercase tracking-widest whitespace-nowrap"
                     style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
                   >
                     {group.date === todayDate ? t('time.today') : formatRelativeDay(group.date, t, locale, timeZone)}

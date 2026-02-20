@@ -15,7 +15,7 @@ export default function SkiConditionsPanel({ data, resort }) {
   return (
     <div className="flex flex-col gap-3">
       {/* Conditions header */}
-      <h3 className="text-white/40 text-[10px] font-semibold uppercase tracking-widest">
+      <h3 className="text-white/60 text-[10px] font-semibold uppercase tracking-widest">
         {t('ski.snowConditions')}
       </h3>
 
@@ -23,7 +23,7 @@ export default function SkiConditionsPanel({ data, resort }) {
       <div className="glass-card p-4">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="text-white/50 text-xs mb-1">{t('ski.conditionsRating')}</div>
+            <div className="text-white/65 text-xs mb-1">{t('ski.conditionsRating')}</div>
             <div
               className="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold"
               style={{ color, background: bg, border: `1px solid ${color}40` }}
@@ -32,7 +32,7 @@ export default function SkiConditionsPanel({ data, resort }) {
             </div>
           </div>
           <div className="text-right">
-            <div className="text-white/40 text-xs mb-1">{t('ski.verticalDrop')}</div>
+            <div className="text-white/60 text-xs mb-1">{t('ski.verticalDrop')}</div>
             <div className="text-white/80 text-sm font-semibold">{resort.verticalDrop} m</div>
           </div>
         </div>
@@ -64,27 +64,27 @@ export default function SkiConditionsPanel({ data, resort }) {
       </div>
 
       {/* Runs estimate */}
-      <h3 className="text-white/40 text-[10px] font-semibold uppercase tracking-widest">
+      <h3 className="text-white/60 text-[10px] font-semibold uppercase tracking-widest">
         {t('ski.runStatus')}
       </h3>
       <div className="glass-card p-4">
         {/* Estimate bar */}
         <div className="flex items-center justify-between mb-2">
           <div>
-            <div className="text-white/50 text-xs mb-1">
+            <div className="text-white/65 text-xs mb-1">
               {t('ski.estimatedOpen')}
-              <span className="text-white/30 ml-1">{t('ski.conditionsBased')}</span>
+              <span className="text-white/50 ml-1">{t('ski.conditionsBased')}</span>
             </div>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-light" style={{ color }}>~{estimatedOpen}</span>
-              <span className="text-white/40 text-sm">
+              <span className="text-white/60 text-sm">
                 {t('ski.of')} {resort.totalRuns} {t('ski.total')}
               </span>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-white/30 text-xs">{t('ski.estClosed')}</div>
-            <div className="text-white/50 text-lg font-light">~{estimatedClosed}</div>
+            <div className="text-white/55 text-xs">{t('ski.estClosed')}</div>
+            <div className="text-white/70 text-lg font-light">~{estimatedClosed}</div>
           </div>
         </div>
 
@@ -98,8 +98,8 @@ export default function SkiConditionsPanel({ data, resort }) {
 
         {/* Disclaimer + link */}
         <div className="flex items-start gap-2 pt-2 border-t border-white/10">
-          <Info size={12} className="text-white/25 shrink-0 mt-0.5" />
-          <p className="text-white/30 text-xs leading-relaxed">
+          <Info size={12} className="text-white/50 shrink-0 mt-0.5" />
+          <p className="text-white/55 text-xs leading-relaxed">
             {t('ski.disclaimer')}
           </p>
         </div>
@@ -123,12 +123,12 @@ export default function SkiConditionsPanel({ data, resort }) {
 function CondStat({ icon, label, value, note }) {
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex items-center gap-1.5 text-white/35">
+      <div className="flex items-center gap-1.5 text-white/55">
         {icon}
         <span className="text-xs">{label}</span>
       </div>
-      <div className="text-white/85 text-sm font-semibold">{value}</div>
-      {note && <div className="text-white/25 text-[10px]">{note}</div>}
+      <div className="text-white/90 text-sm font-semibold">{value}</div>
+      {note && <div className="text-white/50 text-[10px]">{note}</div>}
     </div>
   );
 }

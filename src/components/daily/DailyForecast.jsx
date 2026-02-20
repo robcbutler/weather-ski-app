@@ -22,7 +22,7 @@ export default function DailyForecast() {
       transition={{ duration: 0.5, delay: 0.3 }}
       className="mb-6"
     >
-      <h2 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3">
+      <h2 className="text-white/65 text-xs font-semibold uppercase tracking-wider mb-3">
         {t('sections.sevenDay')}
       </h2>
       <div className="flex flex-col gap-2">

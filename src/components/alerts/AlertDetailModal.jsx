@@ -170,14 +170,14 @@ export default function AlertDetailModal({ alert, onClose }) {
               </span>
             </div>
             {expiry && (
-              <p className="text-white/35 text-[10px] mt-1">
+              <p className="text-white/60 text-[10px] mt-1">
                 {t('alerts.expires')}: {expiry}
               </p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="text-white/30 hover:text-white/70 transition-colors shrink-0 p-0.5"
+            className="text-white/55 hover:text-white/85 transition-colors shrink-0 p-0.5"
             aria-label={t('alerts.dismiss')}
           >
             <X size={18} />
@@ -203,7 +203,7 @@ export default function AlertDetailModal({ alert, onClose }) {
           )}
 
           {!loading && !body && (
-            <p className="text-white/40 text-sm text-center py-6">
+            <p className="text-white/60 text-sm text-center py-6">
               {failed
                 ? 'Could not load alert details.'
                 : 'No additional details available.'}
