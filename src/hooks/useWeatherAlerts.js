@@ -7,11 +7,15 @@ const CORS_PROXY  = 'https://corsproxy.io/?url=';
 // ── Severity map ──────────────────────────────────────────────────────────────
 const SEVERITY_RANK = { Extreme: 4, Severe: 3, Moderate: 2, Minor: 1 };
 
+// Maps EC alert type to severity using Environment Canada's colour system:
+// Warning → Red (Extreme), Watch → Orange (Severe),
+// Advisory → Yellow (Moderate), Statement → Blue (Minor)
 function typeToSeverity(type) {
   const t = type.toLowerCase();
-  if (t === 'warning') return 'Severe';
-  if (t === 'watch')   return 'Moderate';
-  return 'Minor'; // statement, advisory, etc.
+  if (t === 'warning')  return 'Extreme';   // EC Red
+  if (t === 'watch')    return 'Severe';    // EC Orange
+  if (t === 'advisory') return 'Moderate';  // EC Yellow
+  return 'Minor';                           // EC Blue — statement, etc.
 }
 
 // ── Known EC city identifiers + approximate coordinates ───────────────────────

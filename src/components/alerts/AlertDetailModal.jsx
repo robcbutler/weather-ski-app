@@ -3,7 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, X, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const CORS_PROXY = 'https://corsproxy.io/?url=';
+// Try each CORS proxy in order until one succeeds
+const CORS_PROXIES = [
+  url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://corsproxy.org/?${encodeURIComponent(url)}`,
+];
 
 const SEVERITY_STYLES = {
   Extreme: { border: '#e74c3c', bg: 'rgba(231,76,60,0.15)',  text: '#ff7675', label: 'alerts.extreme' },
@@ -57,22 +62,31 @@ async function fetchAlertBody(url) {
   // Zone code is everything after '?' and before '#'  (e.g. "onrm104")
   const zone    = baseUrl.split('?')[1] ?? '';
 
-  const res = await fetch(`${CORS_PROXY}${encodeURIComponent(baseUrl)}`);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const html = await res.text();
+  let lastError = null;
+  for (const makeProxied of CORS_PROXIES) {
+    try {
+      const res = await fetch(makeProxied(baseUrl));
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const html = await res.text();
 
-  const state = extractInitialState(html);
-  if (!state) return null;
+      const state = extractInitialState(html);
+      if (!state) return null; // page parsed but no state — not a proxy problem
 
-  const zoneData = state?.alert?.alert?.[zone];
-  if (!zoneData?.alerts?.length) return null;
+      const zoneData = state?.alert?.alert?.[zone];
+      if (!zoneData?.alerts?.length) return null;
 
-  // Match by UUID (URL hash) or fall back to the first alert in the zone
-  const entry =
-    zoneData.alerts.find(a => a.uuid === hash) ??
-    zoneData.alerts[0];
+      // Match by UUID (URL hash) or fall back to the first alert in the zone
+      const entry =
+        zoneData.alerts.find(a => a.uuid === hash) ??
+        zoneData.alerts[0];
 
-  return entry?.text?.trim() ?? null;
+      return entry?.text?.trim() ?? null;
+    } catch (err) {
+      lastError = err;
+      // try the next proxy
+    }
+  }
+  throw lastError ?? new Error('All CORS proxies failed');
 }
 
 // ── Modal component ───────────────────────────────────────────────────────────
