@@ -61,10 +61,29 @@ export default function HourlyForecast() {
   if (!hourlyForecast?.length) return null;
 
   const locale  = i18n.language === 'fr' ? 'fr-CA' : 'en-CA';
-  const groups    = groupByDay(hourlyForecast);
   const tzOpts    = timeZone ? { timeZone } : {};
   const todayDate = new Date().toLocaleDateString('en-CA', tzOpts);
   const nowHour   = new Date().getHours();
+
+  // Build "YYYY-MM-DDTHH" for the current hour in the city's timezone
+  // so we can drop every hour that has already passed.
+  const cityNowPrefix = (() => {
+    const tz = timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: tz,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', hour12: false,
+    }).formatToParts(new Date());
+    const get = type => parts.find(p => p.type === type).value;
+    return `${get('year')}-${get('month')}-${get('day')}T${get('hour')}`;
+  })();
+
+  // Keep only the current hour and everything after it
+  const upcomingHours = hourlyForecast.filter(
+    item => item.time.slice(0, 13) >= cityNowPrefix,
+  );
+
+  const groups = groupByDay(upcomingHours);
 
   function scrollToDay(index) {
     const el = dayRefs.current[index];
@@ -99,7 +118,7 @@ export default function HourlyForecast() {
                 text-white/50 hover:text-white/90 hover:bg-white/10 active:bg-white/20
               "
             >
-              {i === 0 ? t('time.today') : formatRelativeDay(group.date, t, locale, timeZone)}
+              {group.date === todayDate ? t('time.today') : formatRelativeDay(group.date, t, locale, timeZone)}
             </button>
           ))}
         </div>
@@ -156,7 +175,7 @@ export default function HourlyForecast() {
                     className="text-white/35 text-[10px] font-semibold uppercase tracking-widest whitespace-nowrap"
                     style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
                   >
-                    {gi === 0 ? t('time.today') : formatRelativeDay(group.date, t, locale, timeZone)}
+                    {group.date === todayDate ? t('time.today') : formatRelativeDay(group.date, t, locale, timeZone)}
                   </span>
                   <div className="w-px flex-1 bg-white/10 min-h-[8px]" />
                 </div>
