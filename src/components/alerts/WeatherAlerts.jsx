@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertTriangle, ExternalLink, X } from 'lucide-react';
+import { AlertTriangle, ChevronRight, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import AlertDetailModal from './AlertDetailModal';
 
 const SEVERITY_STYLES = {
   Extreme: { border: '#e74c3c', bg: 'rgba(231,76,60,0.15)',  text: '#ff7675', label: 'alerts.extreme' },
@@ -24,7 +25,7 @@ function formatExpiry(isoStr, locale) {
   }
 }
 
-function AlertCard({ alert, onDismiss }) {
+function AlertCard({ alert, onDismiss, onExpand }) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language === 'fr' ? 'fr-CA' : 'en-CA';
   const style  = SEVERITY_STYLES[alert.severity] ?? fallback;
@@ -71,19 +72,15 @@ function AlertCard({ alert, onDismiss }) {
               </p>
             )}
 
-            {/* View full alert on weather.gc.ca */}
-            {alert.url && (
-              <a
-                href={alert.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[10px] font-medium mt-2 transition-colors"
-                style={{ color: style.text }}
-              >
-                <ExternalLink size={10} />
-                {t('alerts.details')}
-              </a>
-            )}
+            {/* Expand button — opens in-app modal */}
+            <button
+              onClick={() => onExpand(alert)}
+              className="inline-flex items-center gap-1 text-[10px] font-medium mt-2 transition-colors"
+              style={{ color: style.text }}
+            >
+              <ChevronRight size={11} />
+              {t('alerts.details')}
+            </button>
           </div>
 
           {/* Dismiss */}
@@ -101,7 +98,8 @@ function AlertCard({ alert, onDismiss }) {
 }
 
 export default function WeatherAlerts({ alerts, isLoading }) {
-  const [dismissed, setDismissed] = useState(new Set());
+  const [dismissed,    setDismissed]    = useState(new Set());
+  const [expandedAlert, setExpandedAlert] = useState(null);
 
   const visible = alerts.filter(a => !dismissed.has(a.id));
 
@@ -112,16 +110,33 @@ export default function WeatherAlerts({ alerts, isLoading }) {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -6 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="mb-6 flex flex-col gap-2"
-    >
-      <AnimatePresence mode="popLayout">
-        {visible.map(alert => (
-          <AlertCard key={alert.id} alert={alert} onDismiss={dismiss} />
-        ))}
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-6 flex flex-col gap-2"
+      >
+        <AnimatePresence mode="popLayout">
+          {visible.map(alert => (
+            <AlertCard
+              key={alert.id}
+              alert={alert}
+              onDismiss={dismiss}
+              onExpand={setExpandedAlert}
+            />
+          ))}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* In-app detail modal */}
+      <AnimatePresence>
+        {expandedAlert && (
+          <AlertDetailModal
+            alert={expandedAlert}
+            onClose={() => setExpandedAlert(null)}
+          />
+        )}
       </AnimatePresence>
-    </motion.div>
+    </>
   );
 }
