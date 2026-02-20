@@ -24,25 +24,50 @@ function formatExpiry(isoStr, locale) {
 }
 
 // ── Extract full alert text from EC warning page ──────────────────────────────
+// EC page embeds Vue SSR data as:  window.__INITIAL_STATE__={...};
+// Note: no spaces around '=' in the actual HTML.
+function extractInitialState(html) {
+  // Locate the marker (no spaces around =)
+  const marker = 'window.__INITIAL_STATE__=';
+  const idx = html.indexOf(marker);
+  if (idx === -1) return null;
+
+  const braceStart = html.indexOf('{', idx + marker.length);
+  if (braceStart === -1) return null;
+
+  // Walk forward counting braces — lazy regex fails on nested JSON
+  let depth = 0;
+  let end   = braceStart;
+  for (; end < html.length; end++) {
+    if      (html[end] === '{') depth++;
+    else if (html[end] === '}') { depth--; if (depth === 0) break; }
+  }
+
+  try {
+    return JSON.parse(html.slice(braceStart, end + 1));
+  } catch {
+    return null;
+  }
+}
+
 async function fetchAlertBody(url) {
   if (!url) return null;
   const baseUrl = url.split('#')[0];
   const hash    = url.split('#')[1] ?? '';
-  // Zone code is the query-string value (e.g. "onrm104" from "?onrm104")
+  // Zone code is everything after '?' and before '#'  (e.g. "onrm104")
   const zone    = baseUrl.split('?')[1] ?? '';
 
-  const res  = await fetch(`${CORS_PROXY}${encodeURIComponent(baseUrl)}`);
+  const res = await fetch(`${CORS_PROXY}${encodeURIComponent(baseUrl)}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const html = await res.text();
 
-  // Pull the Vue SSR state blob out of the page
-  const stateMatch = html.match(/window\.__INITIAL_STATE__\s*=\s*(\{[\s\S]*?\})(?:\s*;?\s*(?:window\.|<\/script>))/);
-  if (!stateMatch) return null;
+  const state = extractInitialState(html);
+  if (!state) return null;
 
-  const state = JSON.parse(stateMatch[1]);
   const zoneData = state?.alert?.alert?.[zone];
   if (!zoneData?.alerts?.length) return null;
 
-  // Try to match by uuid (the URL hash), else fall back to first alert
+  // Match by UUID (URL hash) or fall back to the first alert in the zone
   const entry =
     zoneData.alerts.find(a => a.uuid === hash) ??
     zoneData.alerts[0];
