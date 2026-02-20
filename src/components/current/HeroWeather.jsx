@@ -36,7 +36,7 @@ export default function HeroWeather() {
       <div className="flex items-start justify-between">
         <div>
           <div
-            className="text-8xl md:text-9xl font-thin leading-none tracking-tighter"
+            className="text-6xl sm:text-8xl md:text-9xl font-thin leading-none tracking-tighter"
             style={getTempStyle(temp)}
           >
             {temp}°
@@ -46,7 +46,7 @@ export default function HeroWeather() {
             {t('hero.feelsLike')} <span style={getTempStyle(feelsLike)}>{feelsLike}°C</span>
           </div>
         </div>
-        <div className="text-7xl md:text-8xl select-none" role="img" aria-label={weatherLabel}>
+        <div className="text-5xl sm:text-7xl md:text-8xl select-none" role="img" aria-label={weatherLabel}>
           {icon}
         </div>
       </div>

@@ -33,8 +33,16 @@ export default function AppShell({ children }) {
           : weatherParticle}
       />
 
-      {/* Main content */}
-      <div className="relative z-20 max-w-4xl mx-auto px-4 py-8 pb-16">
+      {/* Main content — safe-area insets keep content clear of notch & home indicator */}
+      <div
+        className="relative z-20 max-w-4xl mx-auto"
+        style={{
+          paddingTop:    'calc(2rem + env(safe-area-inset-top))',
+          paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))',
+          paddingLeft:   'calc(1rem + env(safe-area-inset-left))',
+          paddingRight:  'calc(1rem + env(safe-area-inset-right))',
+        }}
+      >
         {children}
       </div>
     </div>

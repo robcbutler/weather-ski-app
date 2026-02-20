@@ -69,8 +69,9 @@ export default function CitySearch() {
           placeholder={t('search.placeholder')}
           className="
             w-full bg-transparent text-white placeholder-white/40
-            pl-11 pr-10 py-3.5 text-sm outline-none
+            pl-11 pr-10 py-3.5 outline-none
           "
+          style={{ fontSize: '16px' }}
           aria-label={t('search.ariaLabel')}
           autoComplete="off"
         />
