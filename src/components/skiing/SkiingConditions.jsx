@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useWeather } from '../../context/WeatherContext';
 import { useSkiWeather } from '../../hooks/useSkiWeather';
 import { useWeatherAlerts } from '../../hooks/useWeatherAlerts';
 import SkiResortDropdown from './SkiResortDropdown';
@@ -14,6 +15,8 @@ import WeatherAlerts from '../alerts/WeatherAlerts';
 
 export default function SkiingConditions() {
   const { t, i18n } = useTranslation();
+  const { state } = useWeather();
+  const { selectedCity } = state;
   const [resort, setResort]           = useState(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
   const { data, isLoading, error }    = useSkiWeather(resort);
@@ -38,7 +41,7 @@ export default function SkiingConditions() {
 
       {/* Resort picker */}
       <div className="mb-4">
-        <SkiResortDropdown selected={resort} onSelect={setResort} />
+        <SkiResortDropdown selected={resort} onSelect={setResort} cityLocation={selectedCity} />
       </div>
 
       {/* Loading */}

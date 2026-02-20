@@ -1,11 +1,24 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Mountain, Search, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { SKI_RESORTS, RESORTS_BY_PROVINCE, PROVINCE_ORDER } from '../../data/skiResorts';
 
-export default function SkiResortDropdown({ selected, onSelect }) {
+const NEARBY_KM = 100;
+
+function distKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+export default function SkiResortDropdown({ selected, onSelect, cityLocation }) {
   const { t } = useTranslation();
   const [open, setOpen]   = useState(false);
   const [query, setQuery] = useState('');
@@ -48,6 +61,17 @@ export default function SkiResortDropdown({ selected, onSelect }) {
         r.province.toLowerCase().includes(query.toLowerCase())
       ).sort((a, b) => a.name.localeCompare(b.name))
     : null;
+
+  // Resorts within NEARBY_KM of the selected weather city, sorted by distance
+  const nearbyResorts = useMemo(() => {
+    if (!cityLocation?.latitude || !cityLocation?.longitude) return [];
+    return SKI_RESORTS
+      .map(r => ({ ...r, _dist: distKm(cityLocation.latitude, cityLocation.longitude, r.latitude, r.longitude) }))
+      .filter(r => r._dist <= NEARBY_KM)
+      .sort((a, b) => a._dist - b._dist);
+  }, [cityLocation?.latitude, cityLocation?.longitude]);
+
+  const nearbyIds = useMemo(() => new Set(nearbyResorts.map(r => r.id)), [nearbyResorts]);
 
   const modal = (
     <AnimatePresence>
@@ -127,18 +151,40 @@ export default function SkiResortDropdown({ selected, onSelect }) {
                     </div>
                   )
                 ) : (
-                  PROVINCE_ORDER.filter(p => RESORTS_BY_PROVINCE[p]).map(province => (
-                    <div key={province}>
-                      <div className="px-4 py-1.5 text-white/30 text-[10px] font-semibold uppercase tracking-widest sticky top-0"
-                        style={{ background: 'rgba(15,25,50,0.95)' }}
-                      >
-                        {provinceName(province)}
+                  <>
+                    {/* Nearby section */}
+                    {nearbyResorts.length > 0 && (
+                      <div>
+                        <div
+                          className="px-4 py-1.5 text-[10px] font-semibold uppercase tracking-widest sticky top-0 flex items-center gap-1.5"
+                          style={{ background: 'rgba(15,25,50,0.95)', color: '#74b9ff' }}
+                        >
+                          📍 {t('ski.nearby')}
+                        </div>
+                        {nearbyResorts.map(r => (
+                          <ResortRow key={r.id} resort={r} onSelect={handleSelect} selected={selected} t={t} distanceKm={Math.round(r._dist)} />
+                        ))}
                       </div>
-                      {RESORTS_BY_PROVINCE[province].map(r => (
-                        <ResortRow key={r.id} resort={r} onSelect={handleSelect} selected={selected} t={t} />
-                      ))}
-                    </div>
-                  ))
+                    )}
+
+                    {/* All resorts by province (excluding those already shown nearby) */}
+                    {PROVINCE_ORDER.filter(p => RESORTS_BY_PROVINCE[p]).map(province => {
+                      const rows = RESORTS_BY_PROVINCE[province].filter(r => !nearbyIds.has(r.id));
+                      if (rows.length === 0) return null;
+                      return (
+                        <div key={province}>
+                          <div className="px-4 py-1.5 text-white/30 text-[10px] font-semibold uppercase tracking-widest sticky top-0"
+                            style={{ background: 'rgba(15,25,50,0.95)' }}
+                          >
+                            {provinceName(province)}
+                          </div>
+                          {rows.map(r => (
+                            <ResortRow key={r.id} resort={r} onSelect={handleSelect} selected={selected} t={t} />
+                          ))}
+                        </div>
+                      );
+                    })}
+                  </>
                 )}
               </div>
             </div>
@@ -179,7 +225,7 @@ export default function SkiResortDropdown({ selected, onSelect }) {
   );
 }
 
-function ResortRow({ resort, onSelect, selected, t }) {
+function ResortRow({ resort, onSelect, selected, t, distanceKm }) {
   const isSelected = selected?.id === resort.id;
   return (
     <button
@@ -193,7 +239,10 @@ function ResortRow({ resort, onSelect, selected, t }) {
       <span className={`text-sm ${isSelected ? 'text-white font-medium' : 'text-white/80'}`}>
         {resort.name}
       </span>
-      <span className="text-white/30 text-xs ml-2 shrink-0">
+      <span className="text-white/30 text-xs ml-2 shrink-0 flex items-center gap-2">
+        {distanceKm != null && (
+          <span className="text-[#74b9ff]/70">{distanceKm} km</span>
+        )}
         {resort.totalRuns} {t('ski.runs')}
       </span>
     </button>
