@@ -1,0 +1,169 @@
+{
+  "appTitle": "Rob's First Weather and Ski Report App",
+  "search": {
+    "placeholder": "Search for a city…",
+    "ariaLabel": "Search Canadian city",
+    "ariaLabelClear": "Clear search"
+  },
+  "loading": {
+    "detecting": "Detecting your location…",
+    "fetching": "Fetching weather data…"
+  },
+  "error": {
+    "title": "Something went wrong"
+  },
+  "welcome": {
+    "subtitle": "Allow location access for automatic detection, or search for any city above.",
+    "locationDenied": "Location access was denied or unavailable",
+    "poweredBy": "Powered by Open-Meteo · No API key required"
+  },
+  "hero": {
+    "feelsLike": "Feels like",
+    "wind": "Wind",
+    "humidity": "Humidity",
+    "sunrise": "Sunrise",
+    "sunset": "Sunset"
+  },
+  "sections": {
+    "hours24": "24 Hours",
+    "hourlyForecast": "Hourly Forecast",
+    "sevenDay": "7-Day Forecast",
+    "precipProbability": "Precipitation Probability (3 days)",
+    "skiingConditions": "Skiing Conditions"
+  },
+  "time": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "now": "Now"
+  },
+  "segments": {
+    "morning": "Morning",
+    "morning_time": "6 AM – 12 PM",
+    "afternoon": "Afternoon",
+    "afternoon_time": "12 – 6 PM",
+    "evening": "Evening",
+    "evening_time": "6 – 10 PM",
+    "night": "Night",
+    "night_time": "10 PM – 6 AM"
+  },
+  "chart": {
+    "chance": "Chance",
+    "amount": "Amount",
+    "precipChance": "Precip chance",
+    "snow": "Snow",
+    "rain": "Rain",
+    "mixed": "Mixed (rain + snow)"
+  },
+  "ski": {
+    "selectResort": "Select a Ski Resort",
+    "searchResort": "Search by resort or province…",
+    "noMatch": "No resorts match",
+    "selectPrompt": "Select a ski resort…",
+    "emptyState": "Select a resort above to see snow conditions, forecast, and live radar.",
+    "loading": "Loading ski conditions…",
+    "errorPrefix": "Could not load ski data:",
+    "threeDayForecast": "3-Day Forecast",
+    "noSnow": "No snow",
+    "snowConditions": "Snow Conditions",
+    "conditionsRating": "Conditions Rating",
+    "verticalDrop": "Vertical Drop",
+    "baseDepth": "Base Depth",
+    "newSnow24h": "New Snow (24h)",
+    "temperature": "Temperature",
+    "avgWind": "Avg Wind",
+    "runStatus": "Run Status",
+    "estimatedOpen": "Estimated Open Runs",
+    "conditionsBased": "(conditions-based)",
+    "of": "of",
+    "total": "total",
+    "estClosed": "Est. Closed",
+    "disclaimer": "Live run counts are not available through free public APIs. This estimate is computed from weather conditions only.",
+    "officialStatus": "View official run status at",
+    "precipChart": "Precipitation Probability (3 days)",
+    "runs": "runs",
+    "precipMap": "Precipitation Map",
+    "mapTypeMap": "Map",
+    "mapTypeSatellite": "Satellite",
+    "mapTypeHybrid": "Hybrid",
+    "radarOn": "Radar ON",
+    "radarOff": "Radar OFF",
+    "radarPlay": "Play",
+    "radarPause": "Pause",
+    "radarForecast": "Forecast",
+    "mapsNoKey": "Google Maps API key not set.",
+    "mapsNoKeyHint": "Add VITE_GOOGLE_MAPS_KEY to .env.local",
+    "mapsLoadError": "Failed to load Google Maps — check your API key."
+  },
+  "dining": {
+    "title": "Top Dining Near",
+    "loading": "Finding nearby places…",
+    "noResults": "No places found near this resort.",
+    "review": "review",
+    "reviews": "reviews",
+    "openNow": "Open now",
+    "closed": "Closed",
+    "catRestaurant": "Restaurant",
+    "catBar": "Bar / Pub",
+    "catFastFood": "Fast Food",
+    "minDrive": "min drive"
+  },
+  "alerts": {
+    "extreme": "Extreme",
+    "severe": "Severe",
+    "moderate": "Moderate",
+    "minor": "Minor",
+    "dismiss": "Dismiss alert",
+    "details": "Show details",
+    "less": "Show less",
+    "expires": "Expires"
+  },
+  "conditions": {
+    "excellent": "Excellent",
+    "good": "Good",
+    "fair": "Fair",
+    "poor": "Poor"
+  },
+  "wmo": {
+    "0": "Clear Sky",
+    "1": "Mainly Clear",
+    "2": "Partly Cloudy",
+    "3": "Overcast",
+    "45": "Foggy",
+    "48": "Icy Fog",
+    "51": "Light Drizzle",
+    "53": "Moderate Drizzle",
+    "55": "Dense Drizzle",
+    "56": "Freezing Drizzle",
+    "57": "Heavy Freezing Drizzle",
+    "61": "Slight Rain",
+    "63": "Moderate Rain",
+    "65": "Heavy Rain",
+    "66": "Freezing Rain",
+    "67": "Heavy Freezing Rain",
+    "71": "Slight Snowfall",
+    "73": "Moderate Snowfall",
+    "75": "Heavy Snowfall",
+    "77": "Snow Grains",
+    "80": "Slight Rain Showers",
+    "81": "Moderate Rain Showers",
+    "82": "Violent Rain Showers",
+    "85": "Slight Snow Showers",
+    "86": "Heavy Snow Showers",
+    "95": "Thunderstorm",
+    "96": "Thunderstorm with Hail",
+    "99": "Thunderstorm with Heavy Hail",
+    "unknown": "Unknown"
+  },
+  "provinces": {
+    "BC": "British Columbia",
+    "AB": "Alberta",
+    "QC": "Québec",
+    "ON": "Ontario",
+    "NB": "New Brunswick",
+    "NS": "Nova Scotia",
+    "MB": "Manitoba",
+    "SK": "Saskatchewan",
+    "NL": "Newfoundland",
+    "YT": "Yukon"
+  }
+}
