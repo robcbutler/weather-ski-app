@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertTriangle, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { AlertTriangle, ExternalLink, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const SEVERITY_STYLES = {
@@ -26,7 +26,6 @@ function formatExpiry(isoStr, locale) {
 
 function AlertCard({ alert, onDismiss }) {
   const { t, i18n } = useTranslation();
-  const [expanded, setExpanded] = useState(false);
   const locale = i18n.language === 'fr' ? 'fr-CA' : 'en-CA';
   const style  = SEVERITY_STYLES[alert.severity] ?? fallback;
   const expiry = formatExpiry(alert.expires, locale);
@@ -60,7 +59,7 @@ function AlertCard({ alert, onDismiss }) {
               <span className="text-white/80 text-sm font-semibold">{alert.event}</span>
             </div>
 
-            {/* Headline */}
+            {/* Headline (if present) */}
             {alert.headline && (
               <p className="text-white/60 text-xs mt-1 leading-snug">{alert.headline}</p>
             )}
@@ -72,30 +71,18 @@ function AlertCard({ alert, onDismiss }) {
               </p>
             )}
 
-            {/* Description (expandable) */}
-            <AnimatePresence>
-              {expanded && alert.description && (
-                <motion.p
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{    opacity: 0, height: 0 }}
-                  className="text-white/55 text-xs mt-2 leading-relaxed overflow-hidden"
-                >
-                  {alert.description}
-                </motion.p>
-              )}
-            </AnimatePresence>
-
-            {/* Expand toggle */}
-            {alert.description && (
-              <button
-                onClick={() => setExpanded(e => !e)}
-                className="flex items-center gap-1 text-[10px] font-medium mt-2 transition-colors"
+            {/* View full alert on weather.gc.ca */}
+            {alert.url && (
+              <a
+                href={alert.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[10px] font-medium mt-2 transition-colors"
                 style={{ color: style.text }}
               >
-                {expanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                {expanded ? t('alerts.less') : t('alerts.details')}
-              </button>
+                <ExternalLink size={10} />
+                {t('alerts.details')}
+              </a>
             )}
           </div>
 

@@ -3,18 +3,24 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSkiWeather } from '../../hooks/useSkiWeather';
+import { useWeatherAlerts } from '../../hooks/useWeatherAlerts';
 import SkiResortDropdown from './SkiResortDropdown';
 import Ski3DayForecast from './Ski3DayForecast';
 import SkiConditionsPanel from './SkiConditionsPanel';
 import SkiPrecipChart from './SkiPrecipChart';
 import SkiMap from './SkiMap';
 import SkiDining from './SkiDining';
+import WeatherAlerts from '../alerts/WeatherAlerts';
 
 export default function SkiingConditions() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [resort, setResort]           = useState(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
   const { data, isLoading, error }    = useSkiWeather(resort);
+  const { alerts, isLoading: alertsLoading } = useWeatherAlerts(
+    resort ? { latitude: resort.latitude, longitude: resort.longitude } : null,
+    i18n.language,
+  );
 
   const handleGoogleLoaded = useCallback(() => setGoogleLoaded(true), []);
 
@@ -77,6 +83,7 @@ export default function SkiingConditions() {
             transition={{ duration: 0.3 }}
             className="flex flex-col gap-5"
           >
+            <WeatherAlerts alerts={alerts} isLoading={alertsLoading} />
             <Ski3DayForecast dailyForecast={data.dailyForecast} />
             <SkiConditionsPanel data={data} resort={resort} />
             <SkiPrecipChart precipChart={data.precipChart} />
