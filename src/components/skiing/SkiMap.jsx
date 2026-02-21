@@ -34,7 +34,7 @@ const MAP_STYLE = [
   { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#4e6d70' }] },
 ];
 
-/** Fetches all RainViewer radar frames (past + nowcast). */
+/** Fetches RainViewer radar frames — current snapshot + nowcast only. */
 function useRainViewerFrames() {
   const [frames,    setFrames]    = useState([]);
   const [pastCount, setPastCount] = useState(0);
@@ -45,8 +45,11 @@ function useRainViewerFrames() {
       .then(d => {
         const past    = d.radar?.past    ?? [];
         const nowcast = d.radar?.nowcast ?? [];
-        setFrames([...past, ...nowcast]);
-        setPastCount(past.length);
+        // Only keep the most-recent past frame (current) + all nowcast frames
+        const current = past.length > 0 ? [past[past.length - 1]] : [];
+        setFrames([...current, ...nowcast]);
+        // Frame 0 is always the current snapshot; frames 1+ are nowcast
+        setPastCount(current.length);
       })
       .catch(() => {});
   }, []);
@@ -102,10 +105,10 @@ export default function SkiMap({ resort, onGoogleLoaded }) {
     if (map) map.panTo(center);
   }, [resort.latitude, resort.longitude]);
 
-  // When frames first arrive, jump to the latest past (non-forecast) frame
+  // When frames first arrive, start at frame 0 (current snapshot)
   useEffect(() => {
     if (frames.length > 0) {
-      setFrameIndex(Math.max(0, pastCount - 1));
+      setFrameIndex(0);
     }
   }, [frames.length]);
 
@@ -171,7 +174,7 @@ export default function SkiMap({ resort, onGoogleLoaded }) {
   ];
 
   const currentFrame = frames[frameIndex];
-  const isForecast   = pastCount > 0 && frameIndex >= pastCount;
+  const isForecast   = frameIndex > 0; // frame 0 = current; 1+ = nowcast
 
   return (
     <div>
@@ -223,7 +226,7 @@ export default function SkiMap({ resort, onGoogleLoaded }) {
           <GoogleMap
             mapContainerStyle={{ width: '100%', height: '100%' }}
             center={center}
-            zoom={10}
+            zoom={7}
             options={{
               styles: mapType === 'roadmap' ? MAP_STYLE : [],
               disableDefaultUI: false,
@@ -280,7 +283,7 @@ export default function SkiMap({ resort, onGoogleLoaded }) {
           </div>
 
           {/* Legend */}
-          {pastCount < frames.length && (
+          {frames.length > 1 && (
             <div className="flex justify-end text-[9px] text-blue-300/35 mt-1 pr-1">
               ▲ {t('ski.radarForecast')}
             </div>
