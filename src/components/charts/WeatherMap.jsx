@@ -36,9 +36,10 @@ const MAP_STYLE = [
   { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#4e6d70' }] },
 ];
 
-/** Fetches RainViewer radar frames — current snapshot + nowcast only. */
+/** Fetches all RainViewer radar frames: ~2 hrs of past data + any available nowcast. */
 function useRainViewerFrames() {
-  const [frames, setFrames] = useState([]);
+  const [frames,    setFrames]    = useState([]);
+  const [pastCount, setPastCount] = useState(0);
 
   useEffect(() => {
     fetch('https://api.rainviewer.com/public/weather-maps.json')
@@ -46,13 +47,13 @@ function useRainViewerFrames() {
       .then(d => {
         const past    = d.radar?.past    ?? [];
         const nowcast = d.radar?.nowcast ?? [];
-        const current = past.length > 0 ? [past[past.length - 1]] : [];
-        setFrames([...current, ...nowcast]);
+        setFrames([...past, ...nowcast]);
+        setPastCount(past.length);
       })
       .catch(() => {});
   }, []);
 
-  return frames;
+  return { frames, pastCount };
 }
 
 /** Format Unix timestamp (seconds) to HH:MM local time. */
@@ -91,7 +92,7 @@ export default function WeatherMap() {
   const [isPlaying,  setIsPlaying]  = useState(false);
   const intervalRef = useRef(null);
 
-  const frames = useRainViewerFrames();
+  const { frames, pastCount } = useRainViewerFrames();
 
   const center = selectedCity
     ? { lat: selectedCity.latitude, lng: selectedCity.longitude }
@@ -105,7 +106,7 @@ export default function WeatherMap() {
     if (map && selectedCity) map.panTo(center);
   }, [selectedCity?.latitude, selectedCity?.longitude]);
 
-  // Start at frame 0 and auto-play the nowcast when frames arrive
+  // When frames arrive, start from the oldest and auto-play through the full loop
   useEffect(() => {
     if (frames.length > 0) {
       setFrameIndex(0);
@@ -197,7 +198,7 @@ export default function WeatherMap() {
   ];
 
   const currentFrame = frames[frameIndex];
-  const isForecast   = frameIndex > 0;
+  const isForecast   = pastCount > 0 && frameIndex >= pastCount;
 
   return (
     <motion.section
@@ -294,32 +295,47 @@ export default function WeatherMap() {
               {isPlaying ? <Pause size={13} /> : <Play size={13} />}
             </button>
 
-            {/* Scrubber */}
-            <input
-              type="range"
-              min={0}
-              max={frames.length - 1}
-              value={frameIndex}
-              onChange={e => {
-                setIsPlaying(false);
-                setFrameIndex(Number(e.target.value));
-              }}
-              className="flex-1 h-1 accent-blue-400 cursor-pointer"
-            />
+            {/* Scrubber with NOW marker */}
+            <div className="relative flex-1 flex items-center">
+              <input
+                type="range"
+                min={0}
+                max={frames.length - 1}
+                value={frameIndex}
+                onChange={e => {
+                  setIsPlaying(false);
+                  setFrameIndex(Number(e.target.value));
+                }}
+                className="w-full h-1 accent-blue-400 cursor-pointer"
+              />
+              {/* NOW divider line */}
+              {pastCount > 0 && pastCount < frames.length && (
+                <div
+                  className="absolute w-px h-3 bg-white/50 pointer-events-none"
+                  style={{ left: `${((pastCount - 1) / (frames.length - 1)) * 100}%` }}
+                />
+              )}
+            </div>
 
-            {/* Frame time + forecast badge */}
-            <span className="text-[10px] text-white/50 shrink-0 min-w-[60px] text-right">
+            {/* Current frame time */}
+            <span className={`text-[10px] shrink-0 min-w-[60px] text-right ${isForecast ? 'text-blue-300' : 'text-white/50'}`}>
               {currentFrame ? formatFrameTime(currentFrame.time) : ''}
-              {isForecast && <span className="text-blue-300/70 ml-0.5">▲</span>}
+              {isForecast && <span className="ml-0.5">▲</span>}
             </span>
           </div>
 
-          {/* Legend */}
-          {frames.length > 1 && (
-            <div className="flex justify-end text-[9px] text-blue-300/35 mt-1 pr-1">
-              ▲ {t('ski.radarForecast')}
-            </div>
-          )}
+          {/* Time labels: oldest | NOW | forecast end */}
+          <div className="flex justify-between text-[9px] text-white/25 mt-1 px-0.5">
+            <span>{frames[0] ? formatFrameTime(frames[0].time) : ''}</span>
+            {pastCount > 0 && pastCount < frames.length
+              ? <span className="text-white/40 font-medium">NOW</span>
+              : <span className="text-white/40 font-medium">NOW</span>
+            }
+            <span className={frames.length > pastCount ? 'text-blue-300/40' : 'text-white/25'}>
+              {frames.length > 0 ? formatFrameTime(frames[frames.length - 1].time) : ''}
+              {frames.length > pastCount ? ' ▲' : ''}
+            </span>
+          </div>
         </div>
       )}
 
