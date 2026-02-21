@@ -71,17 +71,23 @@ function transformWeatherData(data) {
     ...getWeatherInfo(daily.weathercode[i]),
   }));
 
-  // --- Day segments (for today's hours) ---
-  const segmentIndices = { morning: [], afternoon: [], evening: [], night: [] };
-  hourly.time.slice(0, 24).forEach((time, i) => {
-    const hour = new Date(time).getHours();
-    const seg  = hourToSegment(hour);
-    segmentIndices[seg].push(i);
-  });
+  // --- Day segments: today + tomorrow (8 ordered segments) ---
+  // offsets are relative to each day's midnight (base = day * 24).
+  // Night spans midnight, so its offsets run 22-29 (22,23 same day + 0-5 next day).
+  const SEG_DEFS = [
+    { key: 'morning',   offsets: [6, 7, 8, 9, 10, 11] },
+    { key: 'afternoon', offsets: [12, 13, 14, 15, 16, 17] },
+    { key: 'evening',   offsets: [18, 19, 20, 21] },
+    { key: 'night',     offsets: [22, 23, 24, 25, 26, 27, 28, 29] },
+  ];
 
-  const daySegments = {};
-  for (const [seg, indices] of Object.entries(segmentIndices)) {
-    daySegments[seg] = computeSegmentStats(hourly, indices);
+  const daySegments = [];
+  for (let day = 0; day < 2; day++) {
+    const base = day * 24;
+    for (const { key, offsets } of SEG_DEFS) {
+      const indices = offsets.map(h => base + h).filter(i => i < hourly.time.length);
+      daySegments.push({ key, day, stats: computeSegmentStats(hourly, indices) });
+    }
   }
 
   // --- Precipitation chart (72h = 3 days) ---
