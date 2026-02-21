@@ -29,6 +29,7 @@
     "hourlyForecast": "Hourly Forecast",
     "sevenDay": "7-Day Forecast",
     "precipProbability": "Precipitation Probability (3 days)",
+    "precipMap": "Precipitation Radar",
     "skiingConditions": "Skiing Conditions"
   },
   "time": {

@@ -29,6 +29,7 @@
     "hourlyForecast": "Prévisions Horaires",
     "sevenDay": "Prévisions 7 Jours",
     "precipProbability": "Probabilité de Précipitations (3 jours)",
+    "precipMap": "Radar de Précipitations",
     "skiingConditions": "Conditions de Ski"
   },
   "time": {

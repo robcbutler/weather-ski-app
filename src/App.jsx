@@ -12,6 +12,7 @@ import DaySegments from './components/segments/DaySegments';
 import HourlyForecast from './components/hourly/HourlyForecast';
 import DailyForecast from './components/daily/DailyForecast';
 import PrecipitationChart from './components/charts/PrecipitationChart';
+import WeatherMap from './components/charts/WeatherMap';
 import SkiingConditions from './components/skiing/SkiingConditions';
 import WeatherAlerts from './components/alerts/WeatherAlerts';
 import { useWeatherAlerts } from './hooks/useWeatherAlerts';
@@ -118,6 +119,7 @@ function WeatherApp() {
             <DaySegments />
             <HourlyForecast />
             <PrecipitationChart />
+            <WeatherMap />
             <DailyForecast />
             <SkiingConditions />
           </motion.div>
