@@ -105,10 +105,11 @@ export default function SkiMap({ resort, onGoogleLoaded }) {
     if (map) map.panTo(center);
   }, [resort.latitude, resort.longitude]);
 
-  // When frames first arrive, start at frame 0 (current snapshot)
+  // When frames first arrive, start at frame 0 and auto-play the nowcast
   useEffect(() => {
     if (frames.length > 0) {
       setFrameIndex(0);
+      setIsPlaying(true);
     }
   }, [frames.length]);
 

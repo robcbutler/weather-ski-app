@@ -105,9 +105,12 @@ export default function WeatherMap() {
     if (map && selectedCity) map.panTo(center);
   }, [selectedCity?.latitude, selectedCity?.longitude]);
 
-  // Start at frame 0 (current snapshot) when frames arrive
+  // Start at frame 0 and auto-play the nowcast when frames arrive
   useEffect(() => {
-    if (frames.length > 0) setFrameIndex(0);
+    if (frames.length > 0) {
+      setFrameIndex(0);
+      setIsPlaying(true);
+    }
   }, [frames.length]);
 
   // Auto-play — advance one frame every 700 ms
